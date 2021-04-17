@@ -7,7 +7,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'Harmony'
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1234@localhost:5432/harmony"
+    SQLALCHEMY_DATABASE_URI = "postgresql:///harmonydb"
     SESSION_COOKIE_SECURE = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -20,4 +20,4 @@ class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     SESSION_COOKIE_SECURE = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1234@localhost:5432/harmony"
+    SQLALCHEMY_DATABASE_URI = "postgresql:///harmonydb"
