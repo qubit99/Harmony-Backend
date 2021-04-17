@@ -2,10 +2,13 @@ from flask_restful import Resource
 from flask import Flask, request, jsonify, make_response
 
 from harmony.models.user import UserAccount, UserPreference, SexualOrientation
-from harmony import db, app
+from harmony.resources.auth import token_required
+from harmony import db
 
 
 class UserSettings(Resource):
+    method_decorators = [token_required]
+
     def get(self):
         request_data = request.args
         if not request_data['user_id']:
