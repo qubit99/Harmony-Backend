@@ -18,12 +18,16 @@ class UserAccount(db.Model):
     job = db.Column(db.String)
     preference_id = db.Column(db.Integer, db.ForeignKey('user_preference.id', ondelete='SET NULL'))
     sexual_orientation_id = db.Column(db.Integer, db.ForeignKey('sexual_orientation.id', ondelete='SET NULL'))
+    gender = db.Column(db.String)
+    ytmusic_link = db.Column(db.String)
+    spotify_link = db.Column(db.String)
 
 
 class UserPreference(db.Model):
     __tablename__ = "user_preference"
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id', ondelete='SET NULL'))
     created = db.Column(db.DateTime, default=datetime.utcnow)
     modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     age_min = db.Column(db.Integer)
