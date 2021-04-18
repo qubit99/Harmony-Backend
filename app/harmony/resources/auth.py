@@ -13,7 +13,7 @@ from harmony.models.user import UserAccount
 
 def token_required(f):
     @wraps(f)
-    def decorator(*args, **kwargs):
+    def decorator(self):
         token = None
 
         if 'x-access-tokens' in request.headers:
@@ -27,10 +27,11 @@ def token_required(f):
                 token, app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = UserAccount.query.filter_by(
                 public_id=data['public_id']).first()
+            
         except:
             return jsonify({'message': 'token is invalid'})
 
-            return f(current_user, *args, **kwargs)
+        return f(self, current_user)        
 
     return decorator
 
