@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from harmony import db, app
+from harmony import db
 
 
 class UserAccount(db.Model):

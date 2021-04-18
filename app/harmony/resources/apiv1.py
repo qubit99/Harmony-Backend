@@ -2,10 +2,13 @@ from flask_restful import Resource
 from flask import Flask, request, jsonify, make_response
 
 from harmony.models.user import UserAccount, UserPreference, SexualOrientation
-from harmony import db, app
+from harmony.resources.auth import token_required
+from harmony import db
 
 
 class UserSettings(Resource):
+    #method_decorators = [token_required]
+
     def get(self):
         request_data = request.args
         if not request_data['user_id']:
@@ -46,10 +49,12 @@ class UserSettings(Resource):
         }
         return jsonify({'success': True, 'data': data}), 200
 
-    def post(self):
-        request_data = request.json
+    @token_required
+    def post(self, user):
+
+        request_data = request.get_json()
         if not request_data['user_id']:
-            return jsonify({'message': "No user id given", 'success': False}), 400
+            return make_response(jsonify({'message': "No user id given", 'success': False}), 400)
         user = UserAccount.query.filter_by(public_id=request_data['user_id']).first()
         if not user:
             return jsonify({'message': "Wrong user id given", 'success': False}), 404

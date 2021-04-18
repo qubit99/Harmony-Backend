@@ -4,7 +4,6 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-from harmony.resources.apiv1 import UserSettings
 
 app = Flask(__name__)
 app.config.from_object("config.DevelopmentConfig")
@@ -21,6 +20,7 @@ def hello():
 ############################################################
 
 from harmony.resources.auth import SignUp, Login
+from harmony.resources.apiv1 import UserSettings
 
 api.add_resource(SignUp, '/signup')
 api.add_resource(Login, '/login')
