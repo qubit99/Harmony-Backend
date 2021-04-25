@@ -41,7 +41,9 @@ class SignUp(Resource):
         data = request.get_json()
 
         hashed_password = generate_password_hash(data['password'], method='sha256')
-
+        user = UserAccount.query.filter_by(email=data['email'])
+        if user:
+            return jsonify({'success': False, 'error': "User already exists"}), 400
         new_user = UserAccount(public_id=str(uuid.uuid4()), f_name=data['f_name'], email=data['email'],
                                password=hashed_password)
         try:
@@ -72,6 +74,6 @@ class Login(Resource):
             token = jwt.encode(
                 {'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
                 app.config['SECRET_KEY'])
-            return jsonify({'token': token.encode().decode('UTF-8')})
+            return jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': user.public_id})
 
         return make_response('could not verify', 401, {'WWW.Authentication': 'Basic realm: "login required"'})

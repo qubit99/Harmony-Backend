@@ -7,11 +7,11 @@ from harmony import db
 
 
 class UserSettings(Resource):
-    #method_decorators = [token_required]
+    # method_decorators = [token_required]
 
     def get(self):
         request_data = request.args
-        if not request_data['user_id']:
+        if not 'user_id' in request_data:
             return jsonify({'message': "No user id given", 'success': False}), 400
         user = UserAccount.query.filter_by(public_id=request_data['user_id']).first()
         if not user:
@@ -53,7 +53,7 @@ class UserSettings(Resource):
     def post(self, user):
 
         request_data = request.get_json()
-        if not request_data['user_id']:
+        if not 'user_id' in request_data:
             return make_response(jsonify({'message': "No user id given", 'success': False}), 400)
         user = UserAccount.query.filter_by(public_id=request_data['user_id']).first()
         if not user:
