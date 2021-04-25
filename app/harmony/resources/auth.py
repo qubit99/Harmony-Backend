@@ -6,7 +6,7 @@ import uuid
 import jwt
 import datetime
 from functools import wraps
-
+from sqlalchemy.exc import SQLAlchemyError
 from harmony import db, app
 from harmony.models.user import UserAccount
 
@@ -44,10 +44,19 @@ class SignUp(Resource):
 
         new_user = UserAccount(public_id=str(uuid.uuid4()), f_name=data['f_name'], email=data['email'],
                                password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()  # add error handling here
+        try:
+            db.session.add(new_user)
+            db.session.commit() 
 
-        return jsonify({'message': 'registered successfully'})
+            token = jwt.encode(
+                {'public_id': new_user.public_id, 'exp': datetime.datetime.utcnow(
+                ) + datetime.timedelta(minutes=30)},
+                app.config['SECRET_KEY'])
+
+            return make_response(jsonify({'token': token.encode().decode('UTF-8')}), 200)
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            return make_response(jsonify({'msg':"could not signup", 'error' : error}), 401)
 
 
 class Login(Resource):
