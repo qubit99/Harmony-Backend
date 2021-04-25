@@ -20,4 +20,4 @@ class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     SESSION_COOKIE_SECURE = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1234@localhost:5432/harmony"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL_PROD")
