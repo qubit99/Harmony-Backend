@@ -41,7 +41,7 @@ class SignUp(Resource):
         data = request.get_json()
 
         hashed_password = generate_password_hash(data['password'], method='sha256')
-        user = UserAccount.query.filter_by(email=data['email'])
+        user = UserAccount.query.filter_by(email=data['email']).first()
         if user:
             return jsonify({'success': False, 'error': "User already exists"}), 400
         new_user = UserAccount(public_id=str(uuid.uuid4()), f_name=data['f_name'], email=data['email'],
