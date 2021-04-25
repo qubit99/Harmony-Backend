@@ -2,7 +2,7 @@ import os
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from app.app import db, app
+from harmony import db, app
 
 
 migrate = Migrate(app, db)
