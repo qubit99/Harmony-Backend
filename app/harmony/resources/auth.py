@@ -49,13 +49,13 @@ class SignUp(Resource):
         try:
             db.session.add(new_user)
             db.session.commit()
-
+            print(new_user)
             token = jwt.encode(
                 {'public_id': new_user.public_id, 'exp': datetime.datetime.utcnow(
                 ) + datetime.timedelta(minutes=30)},
                 app.config['SECRET_KEY'])
 
-            return make_response(jsonify({'token': token.encode().decode('UTF-8')}), 200)
+            return make_response(jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': new_user.public_id}), 200)
         except SQLAlchemyError as e:
             error = str(e.__dict__['orig'])
             return make_response(jsonify({'msg': "could not signup", 'error': error}), 401)
