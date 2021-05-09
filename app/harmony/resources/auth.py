@@ -74,6 +74,6 @@ class Login(Resource):
             token = jwt.encode(
                 {'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
                 app.config['SECRET_KEY'])
-            return jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': user.public_id})
+            return make_response(jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': user.public_id}), 200)
 
-        return make_response('could not verify', 401, {'WWW.Authentication': 'Basic realm: "login required"'})
+        return make_response(jsonify({'messages':'could not verify'}), 401)
