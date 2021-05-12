@@ -7,7 +7,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'Harmony'
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL_PROD")
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1234@localhost:5432/harmony"
     SESSION_COOKIE_SECURE = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

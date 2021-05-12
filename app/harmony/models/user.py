@@ -16,7 +16,7 @@ class UserAccount(db.Model):
     bio = db.Column(db.String)
     birth_date = db.Column(db.DateTime)
     job = db.Column(db.String)
-    preference_id = db.Column(db.Integer, db.ForeignKey('user_preference.id', ondelete='SET NULL'))
+    # preference_id = db.Column(db.Integer, db.ForeignKey('user_preference.id', ondelete='SET NULL'))
     sexual_orientation_id = db.Column(db.Integer, db.ForeignKey('sexual_orientation.id', ondelete='SET NULL'))
     gender = db.Column(db.String)
     ytmusic_link = db.Column(db.String)
@@ -40,3 +40,24 @@ class SexualOrientation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+
+class Passions(db.Model):
+    __tablename__ = "passions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+class UserPassions(db.Model):
+    __tablename__="user_passions"   
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id', ondelete='CASCADE'))
+    passion_id = db.Column(db.Integer, db.ForeignKey('passions.id', ondelete='CASCADE'))
+
+class UserImages(db.Model):
+    __tablename__="user_images"
+
+    img_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id', ondelete='CASCADE'))
+    img_ref = db.Column(db.String)
+    img_src = db.Column(db.String)
