@@ -126,7 +126,7 @@ class ProfileImages(Resource):
 
         user_images = UserImages.query.filter_by(user_id = user.id).all()
         
-        user_images_list = [{'ref':None, 'src':""} for i in range(6)]
+        user_images_list = [{'ref':"", 'src':""} for i in range(6)]
 
         for i in range(len(user_images)):
             user_images_list[i]['ref'] = user_images[i].img_ref
