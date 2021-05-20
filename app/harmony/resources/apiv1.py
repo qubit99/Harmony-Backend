@@ -126,10 +126,9 @@ class ProfileImages(Resource):
 
         user_images = UserImages.query.filter_by(user_id = user.id).all()
         
-        user_images_list = [{'id':None, 'ref':None, 'src':""} for i in range(6)]
+        user_images_list = [{'ref':None, 'src':""} for i in range(6)]
 
         for i in range(len(user_images)):
-            user_images_list[i]['id'] = user_images[i].img_id
             user_images_list[i]['ref'] = user_images[i].img_ref
             user_images_list[i]['src'] = user_images[i].img_src
 
@@ -146,7 +145,7 @@ class ProfileImages(Resource):
         user_images = UserImages.query.filter_by(user_id=user.id).all()
         if user_images:
             for img in user_images:
-                db.session.delete(passion)
+                db.session.delete(img)
             db.session.commit()
 
         user_images_list=[]
