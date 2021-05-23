@@ -22,10 +22,13 @@ def hello():
 ############################################################
 
 from harmony.resources.auth import SignUp, Login
-from harmony.resources.apiv1 import UserSettings, ProfileImages
+from harmony.resources.apiv1 import UserSettings, ProfileImages, UserProfileSuggestions, UserSwipeUpdate, NotificationFeed, UserProfileView
 
 api.add_resource(SignUp, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(UserSettings, '/settings')
 api.add_resource(ProfileImages, '/images')
-
+api.add_resource(UserProfileSuggestions, '/get_profiles')
+api.add_resource(UserSwipeUpdate, '/post_like')
+api.add_resource(NotificationFeed, '/notifications')
+api.add_resource(UserProfileView, '/user/profile')
