@@ -8,7 +8,7 @@ import datetime
 from functools import wraps
 from sqlalchemy.exc import SQLAlchemyError
 from harmony import db, app
-from harmony.models.user import UserAccount
+from harmony.models.user import UserAccount, UserSwipes
 
 
 def token_required(f):
@@ -49,13 +49,17 @@ class SignUp(Resource):
         try:
             db.session.add(new_user)
             db.session.commit()
+            swipe_list = UserSwipes(user_id=new_user.id)
+            db.session.add(swipe_list)
+            db.session.commit()
             print(new_user)
             token = jwt.encode(
                 {'public_id': new_user.public_id, 'exp': datetime.datetime.utcnow(
                 ) + datetime.timedelta(minutes=30)},
                 app.config['SECRET_KEY'])
 
-            return make_response(jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': new_user.public_id}), 200)
+            return make_response(
+                jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': new_user.public_id}), 200)
         except SQLAlchemyError as e:
             error = str(e.__dict__['orig'])
             return make_response(jsonify({'msg': "could not signup", 'error': error}), 401)
@@ -74,6 +78,7 @@ class Login(Resource):
             token = jwt.encode(
                 {'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
                 app.config['SECRET_KEY'])
-            return make_response(jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': user.public_id}), 200)
+            return make_response(jsonify({'token': token.encode().decode('UTF-8'), 'public_user_id': user.public_id}),
+                                 200)
 
-        return make_response(jsonify({'messages':'could not verify'}), 401)
+        return make_response(jsonify({'messages': 'could not verify'}), 401)
