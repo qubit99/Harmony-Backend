@@ -210,8 +210,8 @@ class UserProfileSuggestions(Resource):
     @token_required
     def get(self, user):
         request_data = request.args
-        index = request_data['index']
-        offset = request_data['offset']
+        index = int(request_data['index'])
+        offset = int(request_data['offset'])
         limit = index * offset
         recommendations = []
         get_recommendation_url = HRS_BASE_URL + "/users/{0}/recommend/".format(user.public_id)
@@ -292,7 +292,7 @@ class NotificationFeed(Resource):
     @token_required
     def get(self, user):
         request_data = request.args
-        notification_feed = UserNotificationFeed.query.filter(to_user_id=user.public_id).all()
+        notification_feed = UserNotificationFeed.query.filter_by(to_user_id=user.public_id).all()
         notifications = []
         for notification in notification_feed:
             if notification.created > request_data['last_feed_refresh_date']:
@@ -315,7 +315,8 @@ class UserProfileView(Resource):
     @token_required
     def get(self, user):
         request_data = request.args
-        r_user = UserAccount.query.filter_by(request_data['user_id']).first()
+        print(request_data['user_id'])
+        r_user = UserAccount.query.filter_by(public_id=request_data['user_id']).first()
         images = []
         r_images = UserImages.query.filter_by(user_id=r_user.id).all()
         for image in r_images:
@@ -332,7 +333,7 @@ class UserProfileView(Resource):
         user_data = {
             'public_id': r_user.public_id,
             'images': images,
-            'age': (datetime.datetime.utcnow() - r_user.birth_date).year,
+            'age': (datetime.datetime.utcnow().year - r_user.birth_date.year),
             'name': r_user.f_name,
             'passions': passions,
             'bio': r_user.bio,
