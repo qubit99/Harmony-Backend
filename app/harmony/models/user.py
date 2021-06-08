@@ -83,9 +83,9 @@ class UserNotificationFeed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    to_user_id = db.Column(db.Integer, db.ForeignKey('user_account.id', ondelete='CASCADE'))
+    to_user_id = db.Column(db.Integer, db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
     notification_type_id = db.Column(db.Integer, db.ForeignKey('notification_type.id', ondelete='CASCADE'))
-    from_user_id = db.Column(db.Integer, db.ForeignKey('user_account.id', ondelete='CASCADE'))
+    from_user_id = db.Column(db.Integer, db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
 
 
 class NotificationType(db.Model):
