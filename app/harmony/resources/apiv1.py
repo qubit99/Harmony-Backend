@@ -360,6 +360,7 @@ class UserMatches(Resource):
                 user_id = match.user_id_1
             user_details = UserAccount.query.filter_by(public_id=user_id).first()
             matches_data.append({
+                'match_id': match.id,
                 'name': user_details.f_name,
                 'public_id': user_details.public_id
             })
