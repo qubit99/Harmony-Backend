@@ -9,7 +9,7 @@ class UserAccount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    public_id = db.Column(db.String(256), unique=True)
+    public_id = db.Column(db.String(256), unique=True, nullable=False)
     f_name = db.Column(db.String(50))
     email = db.Column(db.String(64), unique=True, index=True)
     password = db.Column(db.String(256))
@@ -83,9 +83,9 @@ class UserNotificationFeed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    to_user_id = db.Column(db.Integer, db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
+    to_user_id = db.Column(db.String(256), db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
     notification_type_id = db.Column(db.Integer, db.ForeignKey('notification_type.id', ondelete='CASCADE'))
-    from_user_id = db.Column(db.Integer, db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
+    from_user_id = db.Column(db.String(256), db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
 
 
 class NotificationType(db.Model):
@@ -98,3 +98,12 @@ class NotificationType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     message = db.Column(db.String)
+
+class Matches(db.Model):
+    __tablename__ = "matches"
+
+    id = db.Column(db.Integer, primary_key=True)
+    uuid1 = db.Column(db.String(256), db.ForeignKey(
+        'user_account.public_id', ondelete='CASCADE'))
+    uuid2 = db.Column(db.String(256), db.ForeignKey(
+        'user_account.public_id', ondelete='CASCADE'))
