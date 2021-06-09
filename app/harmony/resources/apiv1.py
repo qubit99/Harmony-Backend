@@ -4,7 +4,7 @@ from flask_restful import Resource
 from flask import Flask, request, jsonify, make_response
 
 from harmony.models.user import UserAccount, UserPreference, SexualOrientation, Passions, UserPassions, UserImages, \
-    UserSwipes, UserNotificationFeed, NotificationType
+    UserSwipes, UserNotificationFeed, NotificationType, UserMatches
 from harmony.resources.auth import token_required
 from harmony import db
 import tekore as tk
@@ -270,6 +270,11 @@ class UserSwipeUpdate(Resource):
                 notification21 = UserNotificationFeed(to_user_id=user_id,
                                                       from_user_id=user.public_id,
                                                       notification_type_id=1)
+                match = UserMatches(
+                    user_id_1=user_id,
+                    user_id_2=user.public_id
+                )
+                db.session.add(match)
                 db.session.add(notification12)
                 db.session.add(notification21)
                 db.session.commit()
@@ -340,3 +345,22 @@ class UserProfileView(Resource):
             'job': r_user.job
         }
         return make_response(jsonify(user_data=user_data), 200)
+
+
+class UserMatches(Resource):
+
+    @token_required
+    def get(self, user):
+        matches = UserMatches.query.filter(UserMatches.user_id_1 == user.public_id | UserMatches.user_id_2 == user.public_id).all()
+        matches_data = []
+        for match in matches:
+            if match.user_id_1 == user.public_id:
+                user_id = match.user_id_2
+            else:
+                user_id = match.user_id_1
+            user_details = UserAccount.query.filter_by(public_id=user_id).first()
+            matches_data.append({
+                'name': user_details.f_name,
+                'public_id': user_details.public_id
+            })
+        return make_response(jsonify(matches=matches_data, success=True), 200)
