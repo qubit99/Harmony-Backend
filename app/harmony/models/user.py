@@ -99,11 +99,12 @@ class NotificationType(db.Model):
     name = db.Column(db.String)
     message = db.Column(db.String)
 
-class Matches(db.Model):
-    __tablename__ = "matches"
+
+class UserMatches(db.Model):
+    __tablename__ = "user_matches"
 
     id = db.Column(db.Integer, primary_key=True)
-    uuid1 = db.Column(db.String(256), db.ForeignKey(
-        'user_account.public_id', ondelete='CASCADE'))
-    uuid2 = db.Column(db.String(256), db.ForeignKey(
-        'user_account.public_id', ondelete='CASCADE'))
+    user_id_1 = db.Column(db.String, db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
+    user_id_2 = db.Column(db.String, db.ForeignKey('user_account.public_id', ondelete='CASCADE'))
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+
