@@ -345,3 +345,22 @@ class UserProfileView(Resource):
             'job': r_user.job
         }
         return make_response(jsonify(user_data=user_data), 200)
+
+
+class UserMatches(Resource):
+
+    @token_required
+    def get(self, user):
+        matches = UserMatches.query.filter(UserMatches.user_id_1 == user.public_id | UserMatches.user_id_2 == user.public_id).all()
+        matches_data = []
+        for match in matches:
+            if match.user_id_1 == user.public_id:
+                user_id = match.user_id_2
+            else:
+                user_id = match.user_id_1
+            user_details = UserAccount.query.filter_by(public_id=user_id).first()
+            matches_data.append({
+                'name': user_details.f_name,
+                'public_id': user_details.public_id
+            })
+        return make_response(jsonify(matches=matches_data, success=True), 200)
