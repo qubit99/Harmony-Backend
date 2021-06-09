@@ -4,7 +4,7 @@ from flask_restful import Resource
 from flask import Flask, request, jsonify, make_response
 
 from harmony.models.user import UserAccount, UserPreference, SexualOrientation, Passions, UserPassions, UserImages, \
-    UserSwipes, UserNotificationFeed, NotificationType
+    UserSwipes, UserNotificationFeed, NotificationType, UserMatches
 from harmony.resources.auth import token_required
 from harmony import db
 import tekore as tk
@@ -270,6 +270,11 @@ class UserSwipeUpdate(Resource):
                 notification21 = UserNotificationFeed(to_user_id=user_id,
                                                       from_user_id=user.public_id,
                                                       notification_type_id=1)
+                match = UserMatches(
+                    user_id_1=user_id,
+                    user_id_2=user.public_id
+                )
+                db.session.add(match)
                 db.session.add(notification12)
                 db.session.add(notification21)
                 db.session.commit()
